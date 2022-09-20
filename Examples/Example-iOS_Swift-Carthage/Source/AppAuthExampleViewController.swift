@@ -24,7 +24,7 @@ typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
 /**
  The OIDC issuer from which the configuration will be discovered.
 */
-let kIssuer: String = "https://issuer.example.com";
+let kIssuer: String = "https://accounts.google.com";
 
 /**
  The OAuth client ID.
@@ -32,14 +32,14 @@ let kIssuer: String = "https://issuer.example.com";
  For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
  Set to nil to use dynamic registration with this example.
 */
-let kClientID: String? = "YOUR_CLIENT_ID";
+let kClientID: String? = "192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re.apps.googleusercontent.com";
 
 /**
  The OAuth redirect URI for the client @c kClientID.
 
  For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
 */
-let kRedirectURI: String = "com.example.app:/oauth2redirect/example-provider";
+let kRedirectURI: String = "com.googleusercontent.apps.192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re:/oauth2redirect/google";
 
 /**
  NSCoding key for the authState property.
