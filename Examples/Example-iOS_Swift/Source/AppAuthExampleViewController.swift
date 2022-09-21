@@ -348,7 +348,7 @@ extension AppAuthExampleViewController {
         else {
             return
         }
-        if let authState = try NSKeyedUnarchiver.unarchivedObject(ofClass: OIDAuthState.self, from: data) {
+        if let authState = try? NSKeyedUnarchiver.unarchivedObject(ofClass: OIDAuthState.self, from: data) {
             setAuthState(authState)
         }
     }
