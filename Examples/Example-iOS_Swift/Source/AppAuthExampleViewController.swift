@@ -1,13 +1,12 @@
 import AppAuth
 import UIKit
+//import SequenexOpenIdConnectLibrary
 
 typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
                                       _ registrationResponse: OIDRegistrationResponse?) -> Void
-
 let OIDCIssuer: String = "https://accounts.google.com";
 let OAuthClientID: String? = "192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re.apps.googleusercontent.com";
 let OAuthRedirectURI: String = "com.googleusercontent.apps.192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re:/oauth2redirect/google";
-
 let kAppAuthExampleAuthStateKey: String = "authState";
 
 class AppAuthExampleViewController: UIViewController {
