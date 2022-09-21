@@ -1,20 +1,16 @@
 import AppAuth
 import UIKit
 
-typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?, _ registrationResponse: OIDRegistrationResponse?) -> Void
+typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
+                                      _ registrationResponse: OIDRegistrationResponse?) -> Void
 
 let OIDCIssuer: String = "https://accounts.google.com";
 let OAuthClientID: String? = "192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re.apps.googleusercontent.com";
 let OAuthRedirectURI: String = "com.googleusercontent.apps.192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re:/oauth2redirect/google";
 
-/**
- NSCoding key for the authState property.
-*/
 let kAppAuthExampleAuthStateKey: String = "authState";
 
-
 class AppAuthExampleViewController: UIViewController {
-
     @IBOutlet private weak var authAutoButton: UIButton!
     @IBOutlet private weak var authManual: UIButton!
     @IBOutlet private weak var codeExchangeButton: UIButton!
@@ -26,51 +22,37 @@ class AppAuthExampleViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.validateOAuthConfiguration()
-
-        self.loadState()
-        self.updateUI()
+        validateOAuthConfiguration()
+        loadState()
+        updateUI()
     }
 }
 
 extension AppAuthExampleViewController {
-
     func validateOAuthConfiguration() {
-
-        // The example needs to be configured with your own client details.
-        // See: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md
-
         assert(OIDCIssuer != "https://issuer.example.com",
             "Update kIssuer with your own issuer.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
-
         assert(OAuthClientID != "YOUR_CLIENT_ID",
             "Update kClientID with your own client ID.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
-
         assert(OAuthRedirectURI != "com.example.app:/oauth2redirect/example-provider",
             "Update kRedirectURI with your own redirect URI.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
-
-        // verifies that the custom URI scheme has been updated in the Info.plist
         guard let urlTypes: [AnyObject] = Bundle.main.object(forInfoDictionaryKey: "CFBundleURLTypes") as? [AnyObject], urlTypes.count > 0 else {
             assertionFailure("No custom URI scheme has been configured for the project.")
             return
         }
-
         guard let items = urlTypes[0] as? [String: AnyObject],
               let urlSchemes = items["CFBundleURLSchemes"] as? [AnyObject], urlSchemes.count > 0
         else {
             assertionFailure("No custom URI scheme has been configured for the project.")
             return
         }
-
         guard let urlScheme = urlSchemes[0] as? String else {
             assertionFailure("No custom URI scheme has been configured for the project.")
             return
         }
-
         assert(urlScheme != "com.example.app",
             "Configure the URI scheme in Info.plist (URL Types -> Item 0 -> URL Schemes -> Item 0) " +
                 "with the scheme of your redirect URI. Full instructions: " +
@@ -79,39 +61,30 @@ extension AppAuthExampleViewController {
 
 }
 
-//MARK: IBActions
-
 extension AppAuthExampleViewController {
 
     @IBAction func authWithAutoCodeExchange(_ sender: UIButton) {
         guard let issuer = URL(string: OIDCIssuer) else {
-            self.logMessage("Error creating URL for : \(OIDCIssuer)")
+            logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
-        self.logMessage("Fetching configuration for issuer: \(issuer)")
-
-        // discovers endpoints
+        logMessage("Fetching configuration for issuer: \(issuer)")
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
-
             guard let config = configuration else {
                 self.logMessage("Error retrieving discovery document: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
                 return
             }
-
             self.logMessage("Got configuration: \(config)")
-
             if let clientId = OAuthClientID {
                 self.doAuthWithAutoCodeExchange(configuration: config, clientID: clientId, clientSecret: nil)
             }
             else {
                 self.doClientRegistration(configuration: config) { configuration, response in
-
                     guard let configuration = configuration, let clientID = response?.clientID else {
                         self.logMessage("Error retrieving configuration OR clientID")
                         return
                     }
-
                     self.doAuthWithAutoCodeExchange(configuration: configuration,
                         clientID: clientID,
                         clientSecret: response?.clientSecret)
@@ -122,41 +95,29 @@ extension AppAuthExampleViewController {
     }
 
     @IBAction func authNoCodeExchange(_ sender: UIButton) {
-
         guard let issuer = URL(string: OIDCIssuer) else {
-            self.logMessage("Error creating URL for : \(OIDCIssuer)")
+            logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
-
-        self.logMessage("Fetching configuration for issuer: \(issuer)")
-
+        logMessage("Fetching configuration for issuer: \(issuer)")
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
-
             if let error = error {
                 self.logMessage("Error retrieving discovery document: \(error.localizedDescription)")
                 return
             }
-
             guard let configuration = configuration else {
                 self.logMessage("Error retrieving discovery document. Error & Configuration both are NIL!")
                 return
             }
-
             self.logMessage("Got configuration: \(configuration)")
-
             if let clientId = OAuthClientID {
-
                 self.doAuthWithoutCodeExchange(configuration: configuration, clientID: clientId, clientSecret: nil)
-
             }
             else {
-
                 self.doClientRegistration(configuration: configuration) { configuration, response in
-
                     guard let configuration = configuration, let response = response else {
                         return
                     }
-
                     self.doAuthWithoutCodeExchange(configuration: configuration,
                         clientID: response.clientID,
                         clientSecret: response.clientSecret)
@@ -166,15 +127,12 @@ extension AppAuthExampleViewController {
     }
 
     @IBAction func codeExchange(_ sender: UIButton) {
-        guard let tokenExchangeRequest = self.authState?.lastAuthorizationResponse.tokenExchangeRequest() else {
-            self.logMessage("Error creating authorization code exchange request")
+        guard let tokenExchangeRequest = authState?.lastAuthorizationResponse.tokenExchangeRequest() else {
+            logMessage("Error creating authorization code exchange request")
             return
         }
-
-        self.logMessage("Performing authorization code exchange with request \(tokenExchangeRequest)")
-
+        logMessage("Performing authorization code exchange with request \(tokenExchangeRequest)")
         OIDAuthorizationService.perform(tokenExchangeRequest) { response, error in
-
             if let tokenResponse = response {
                 self.logMessage("Received token response with accessToken: \(tokenResponse.accessToken ?? "DEFAULT_TOKEN")")
             }
@@ -186,91 +144,65 @@ extension AppAuthExampleViewController {
     }
 
     @IBAction func userinfo(_ sender: UIButton) {
-
         guard let userinfoEndpoint = self.authState?.lastAuthorizationResponse.request.configuration.discoveryDocument?.userinfoEndpoint else {
-            self.logMessage("Userinfo endpoint not declared in discovery document")
+            logMessage("Userinfo endpoint not declared in discovery document")
             return
         }
-
-        self.logMessage("Performing userinfo request")
-
+        logMessage("Performing userinfo request")
         let currentAccessToken: String? = self.authState?.lastTokenResponse?.accessToken
-
-        self.authState?.performAction() { (accessToken, idToken, error) in
-
+        authState?.performAction() { (accessToken, idToken, error) in
             if error != nil {
                 self.logMessage("Error fetching fresh tokens: \(error?.localizedDescription ?? "ERROR")")
                 return
             }
-
             guard let accessToken = accessToken else {
                 self.logMessage("Error getting accessToken")
                 return
             }
-
             if currentAccessToken != accessToken {
                 self.logMessage("Access token was refreshed automatically (\(currentAccessToken ?? "CURRENT_ACCESS_TOKEN") to \(accessToken))")
             }
             else {
                 self.logMessage("Access token was fresh and not updated \(accessToken)")
             }
-
             var urlRequest = URLRequest(url: userinfoEndpoint)
             urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
-
             let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-
                 DispatchQueue.main.async {
-
                     guard error == nil else {
                         self.logMessage("HTTP request failed \(error?.localizedDescription ?? "ERROR")")
                         return
                     }
-
                     guard let response = response as? HTTPURLResponse else {
                         self.logMessage("Non-HTTP response")
                         return
                     }
-
                     guard let data = data else {
                         self.logMessage("HTTP response data is empty")
                         return
                     }
-
                     var json: [AnyHashable: Any]?
-
                     do {
                         json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                     } catch {
                         self.logMessage("JSON Serialization Error")
                     }
-
                     if response.statusCode != 200 {
-                        // server replied with an error
-                        let responseText: String? = String(data: data, encoding: String.Encoding.utf8)
-
+                        let errorText: String? = String(data: data, encoding: String.Encoding.utf8)
                         if response.statusCode == 401 {
-                            // "401 Unauthorized" generally indicates there is an issue with the authorization
-                            // grant. Puts OIDAuthState into an error state.
                             let oauthError = OIDErrorUtilities.resourceServerAuthorizationError(withCode: 0,
-                                errorResponse: json,
-                                underlyingError: error)
+                                errorResponse: json, underlyingError: error)
                             self.authState?.update(withAuthorizationError: oauthError)
-                            self.logMessage("Authorization Error (\(oauthError)). Response: \(responseText ?? "RESPONSE_TEXT")")
+                            self.logMessage("Authorization Error (\(oauthError)). Response: \(errorText ?? "RESPONSE_TEXT")")
                         }
                         else {
-                            self.logMessage("HTTP: \(response.statusCode), Response: \(responseText ?? "RESPONSE_TEXT")")
+                            self.logMessage("HTTP: \(response.statusCode), Response: \(errorText ?? "RESPONSE_TEXT")")
                         }
-
                         return
                     }
-
-                    if let json = json {
-                        self.logMessage("Success: \(json)")
-                    }
+                    if let json = json { self.logMessage("Success: \(json)") }
                 }
             }
-
             task.resume()
         }
     }
