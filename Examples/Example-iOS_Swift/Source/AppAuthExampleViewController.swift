@@ -1,6 +1,6 @@
 import AppAuth
 import UIKit
-//import SequenexOpenIdConnectLibrary
+import SequenexOpenIdConnectLibrary
 
 typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?,
                                       _ registrationResponse: OIDRegistrationResponse?) -> Void
@@ -16,8 +16,8 @@ class AppAuthExampleViewController: UIViewController {
     @IBOutlet private weak var userinfoButton: UIButton!
     @IBOutlet private weak var logTextView: UITextView!
     @IBOutlet private weak var trashButton: UIBarButtonItem!
-
     private var authState: OIDAuthState?
+    let oidc = SequenexOpenIdConnectLibrary(OIDCIssuer, OAuthClientID, OAuthRedirectURI)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,15 +70,15 @@ extension AppAuthExampleViewController {
         logMessage("Fetching configuration for issuer: \(issuer)")
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
             guard let config = configuration else {
-                self.logMessage("Error retrieving discovery document: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
+                let error = error?.localizedDescription ?? "DEFAULT_ERROR"
+                self.logMessage("Error retrieving discovery document: \(error)")
                 self.setAuthState(nil)
                 return
             }
             self.logMessage("Got configuration: \(config)")
             if let clientId = OAuthClientID {
                 self.doAuthWithAutoCodeExchange(configuration: config, clientID: clientId, clientSecret: nil)
-            }
-            else {
+            } else {
                 self.doClientRegistration(configuration: config) { configuration, response in
                     guard let configuration = configuration, let clientID = response?.clientID else {
                         self.logMessage("Error retrieving configuration OR clientID")
@@ -111,8 +111,7 @@ extension AppAuthExampleViewController {
             self.logMessage("Got configuration: \(configuration)")
             if let clientId = OAuthClientID {
                 self.doAuthWithoutCodeExchange(configuration: configuration, clientID: clientId, clientSecret: nil)
-            }
-            else {
+            } else {
                 self.doClientRegistration(configuration: configuration) { configuration, response in
                     guard let configuration = configuration, let response = response else {
                         return
@@ -131,25 +130,27 @@ extension AppAuthExampleViewController {
             return
         }
         logMessage("Performing authorization code exchange with request \(tokenExchangeRequest)")
-        OIDAuthorizationService.perform(tokenExchangeRequest) { response, error in
+        OIDAuthorizationService.perform(tokenExchangeRequest, callback: { response, error in
             if let tokenResponse = response {
-                self.logMessage("Received token response with accessToken: \(tokenResponse.accessToken ?? "DEFAULT_TOKEN")")
-            }
-            else {
+                let token = tokenResponse.accessToken ?? "DEFAULT_TOKEN"
+                self.logMessage("Received token response with accessToken: \(token)")
+            } else {
                 self.logMessage("Token exchange error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
             }
             self.authState?.update(with: response, error: error)
-        }
+        })
     }
 
     @IBAction func userinfo(_ sender: UIButton) {
-        guard let userinfoEndpoint = self.authState?.lastAuthorizationResponse.request.configuration.discoveryDocument?.userinfoEndpoint else {
+        guard let userinfoEndpoint = authState?.lastAuthorizationResponse.request
+            .configuration.discoveryDocument?.userinfoEndpoint
+        else {
             logMessage("Userinfo endpoint not declared in discovery document")
             return
         }
         logMessage("Performing userinfo request")
         let currentAccessToken: String? = self.authState?.lastTokenResponse?.accessToken
-        authState?.performAction() { (accessToken, idToken, error) in
+        authState?.performAction { (accessToken, _, error) in
             if error != nil {
                 self.logMessage("Error fetching fresh tokens: \(error?.localizedDescription ?? "ERROR")")
                 return
@@ -159,9 +160,9 @@ extension AppAuthExampleViewController {
                 return
             }
             if currentAccessToken != accessToken {
-                self.logMessage("Access token was refreshed automatically (\(currentAccessToken ?? "CURRENT_ACCESS_TOKEN") to \(accessToken))")
-            }
-            else {
+                let info = "\(currentAccessToken ?? "CURRENT_ACCESS_TOKEN") to \(accessToken)"
+                self.logMessage("Access token was refreshed automatically (\(info))")
+            } else {
                 self.logMessage("Access token was fresh and not updated \(accessToken)")
             }
             var urlRequest = URLRequest(url: userinfoEndpoint)
@@ -192,9 +193,9 @@ extension AppAuthExampleViewController {
                             let oauthError = OIDErrorUtilities.resourceServerAuthorizationError(withCode: 0,
                                 errorResponse: json, underlyingError: error)
                             self.authState?.update(withAuthorizationError: oauthError)
-                            self.logMessage("Authorization Error (\(oauthError)). Response: \(errorText ?? "RESPONSE_TEXT")")
-                        }
-                        else {
+                            let response = errorText ?? "RESPONSE_TEXT"
+                            self.logMessage("Authorization Error (\(oauthError)). Response: \(response)")
+                        } else {
                             self.logMessage("HTTP: \(response.statusCode), Response: \(errorText ?? "RESPONSE_TEXT")")
                         }
                         return
@@ -209,7 +210,7 @@ extension AppAuthExampleViewController {
     @IBAction func trashClicked(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: nil,
             message: nil,
-            preferredStyle: UIAlertControllerStyle.actionSheet)
+            preferredStyle: UIAlertController.Style.actionSheet)
 
         let clearAuthAction = UIAlertAction(title: "Clear OAuthState", style: .destructive) { (_: UIAlertAction) in
             self.setAuthState(nil)
@@ -247,8 +248,7 @@ extension AppAuthExampleViewController {
                 self.setAuthState(OIDAuthState(registrationResponse: regResponse))
                 self.logMessage("Got registration response: \(regResponse)")
                 callback(configuration, regResponse)
-            }
-            else {
+            } else {
                 self.logMessage("Registration error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
             }
@@ -277,17 +277,18 @@ extension AppAuthExampleViewController {
         appDelegate.currentAuthorizationFlow = OIDAuthState.authState(
             byPresenting: request, presenting: self) { authState, error in
             if let authState = authState {
-                self.logMessage("Got authorization tokens. Access token: \(authState.lastTokenResponse?.accessToken ?? "DEFAULT_TOKEN")")
+                let token = authState.lastTokenResponse?.accessToken ?? "DEFAULT_TOKEN"
+                self.logMessage("Got authorization tokens. Access token: \(token)")
                 self.setAuthState(authState)
-            }
-            else {
+            } else {
                 self.logMessage("Authorization error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
             }
         }
     }
 
-    func doAuthWithoutCodeExchange(configuration: OIDServiceConfiguration, clientID: String, clientSecret: String?) {
+    func doAuthWithoutCodeExchange(configuration: OIDServiceConfiguration,
+                                   clientID: String, clientSecret: String?) {
         guard let redirectURI = URL(string: OAuthRedirectURI) else {
             logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
@@ -306,17 +307,17 @@ extension AppAuthExampleViewController {
 
         logMessage("Initiating authorization request with scope: \(request.scope ?? "DEFAULT_SCOPE")")
 
-        appDelegate.currentAuthorizationFlow = OIDAuthorizationService.present(request, presenting: self) { (response, error) in
-            if let response = response {
-                let authState = OIDAuthState(authorizationResponse: response)
-                self.setAuthState(authState)
-                self.logMessage("Authorization response with code: \(response.authorizationCode ?? "DEFAULT_CODE")")
-                // could just call [self tokenExchange:nil] directly, but will let the user initiate it.
+        appDelegate.currentAuthorizationFlow = OIDAuthorizationService
+            .present(request, presenting: self) { (response, error) in
+                if let response = response {
+                    let authState = OIDAuthState(authorizationResponse: response)
+                    self.setAuthState(authState)
+                    self.logMessage("Authorization response with code: \(response.authorizationCode ?? "DEFAULT_CODE")")
+                    // could just call [self tokenExchange:nil] directly, but will let the user initiate it.
+                } else {
+                    self.logMessage("Authorization error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
+                }
             }
-            else {
-                self.logMessage("Authorization error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
-            }
-        }
     }
 }
 
@@ -333,7 +334,7 @@ extension AppAuthExampleViewController: OIDAuthStateChangeDelegate, OIDAuthState
 extension AppAuthExampleViewController {
 
     func saveState() {
-        var data: Data? = nil
+        var data: Data?
         if let authState = authState { data = NSKeyedArchiver.archivedData(withRootObject: authState) }
         if let userDefaults = UserDefaults(suiteName: "group.net.openid.appauth.Example") {
             userDefaults.set(data, forKey: kAppAuthExampleAuthStateKey)
@@ -347,28 +348,26 @@ extension AppAuthExampleViewController {
         else {
             return
         }
-        if let authState = NSKeyedUnarchiver.unarchiveObject(with: data) as? OIDAuthState {
+        if let authState = try NSKeyedUnarchiver.unarchivedObject(ofClass: OIDAuthState.self, from: data) {
             setAuthState(authState)
         }
     }
 
     func setAuthState(_ authState: OIDAuthState?) {
-        if (self.authState == authState) {
-            return
-        }
+        if self.authState == authState { return }
         self.authState = authState
         self.authState?.stateChangeDelegate = self
         stateChanged()
     }
 
     func updateUI() {
-        codeExchangeButton.isEnabled = self.authState?.lastAuthorizationResponse.authorizationCode != nil && !((self.authState?.lastTokenResponse) != nil)
-        if let authState = self.authState {
+        codeExchangeButton.isEnabled = authState?.lastAuthorizationResponse.authorizationCode != nil
+            && !((authState?.lastTokenResponse) != nil)
+        if let authState = authState {
             authAutoButton.setTitle("1. Re-Auth", for: .normal)
             authManual.setTitle("1(A) Re-Auth", for: .normal)
             userinfoButton.isEnabled = authState.isAuthorized ? true : false
-        }
-        else {
+        } else {
             authAutoButton.setTitle("1. Auto", for: .normal)
             authManual.setTitle("1(A) Manual", for: .normal)
             userinfoButton.isEnabled = false
@@ -382,9 +381,9 @@ extension AppAuthExampleViewController {
 
     func logMessage(_ message: String?) {
         guard let message = message else { return }
-        print(message);
+        print(message)
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm:ss";
+        dateFormatter.dateFormat = "hh:mm:ss"
         let dateString = dateFormatter.string(from: Date())
         DispatchQueue.main.async {
             self.logTextView.text = "\(self.logTextView.text ?? "")\n\(dateString): \(message)"

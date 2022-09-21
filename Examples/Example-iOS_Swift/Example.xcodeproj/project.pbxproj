@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0463EB4C28DB3CE600C641AC /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB4B28DB3CE600C641AC /* AppAuth */; };
-		0463EB4E28DB3CE600C641AC /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB4D28DB3CE600C641AC /* AppAuthCore */; };
+		040B050F28DB4D190044551A /* SequenexOpenIdConnectLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 040B050E28DB4D190044551A /* SequenexOpenIdConnectLibrary */; };
 		9F265BD11F9AC69300DC14BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BC91F9AC69300DC14BF /* Assets.xcassets */; };
 		9F265BD31F9AC69300DC14BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BCB1F9AC69300DC14BF /* LaunchScreen.storyboard */; };
 		9F265BD41F9AC69300DC14BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BCD1F9AC69300DC14BF /* Main.storyboard */; };
@@ -31,7 +30,6 @@
 
 /* Begin PBXFileReference section */
 		040B050D28DB443C0044551A /* SequenexOpenIdConnectLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SequenexOpenIdConnectLibrary; path = ../SequenexOpenIdConnectLibrary; sourceTree = "<group>"; };
-		0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "openid-AppAuth-iOS"; path = ../..; sourceTree = "<group>"; };
 		0646249A205F026300072191 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		064624AD205F034A00072191 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		9F265B971F9AC5D600DC14BF /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,7 +38,6 @@
 		9F265BCE1F9AC69300DC14BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9F265BCF1F9AC69300DC14BF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F265BD01F9AC69300DC14BF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9F265BD91F9AE50400DC14BF /* AppAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppAuth.framework; path = Carthage/Build/iOS/AppAuth.framework; sourceTree = "<group>"; };
 		9FD378221FB7C6F800436204 /* AppAuthExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAuthExampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,8 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0463EB4C28DB3CE600C641AC /* AppAuth in Frameworks */,
-				0463EB4E28DB3CE600C641AC /* AppAuthCore in Frameworks */,
+				040B050F28DB4D190044551A /* SequenexOpenIdConnectLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +56,6 @@
 		0406044B28D9F1480099CAF3 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */,
 				040B050D28DB443C0044551A /* SequenexOpenIdConnectLibrary */,
 			);
 			name = Packages;
@@ -101,7 +96,6 @@
 		9F265BD81F9AE4CA00DC14BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9F265BD91F9AE50400DC14BF /* AppAuth.framework */,
 				0646249A205F026300072191 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -125,8 +119,7 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				0463EB4B28DB3CE600C641AC /* AppAuth */,
-				0463EB4D28DB3CE600C641AC /* AppAuthCore */,
+				040B050E28DB4D190044551A /* SequenexOpenIdConnectLibrary */,
 			);
 			productName = Example;
 			productReference = 9F265B971F9AC5D600DC14BF /* Example.app */;
@@ -405,13 +398,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0463EB4B28DB3CE600C641AC /* AppAuth */ = {
+		040B050E28DB4D190044551A /* SequenexOpenIdConnectLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AppAuth;
-		};
-		0463EB4D28DB3CE600C641AC /* AppAuthCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppAuthCore;
+			productName = SequenexOpenIdConnectLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
