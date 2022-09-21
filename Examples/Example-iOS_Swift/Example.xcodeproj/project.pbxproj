@@ -30,8 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040B050D28DB443C0044551A /* SequenexOpenIdConnectLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SequenexOpenIdConnectLibrary; path = ../SequenexOpenIdConnectLibrary; sourceTree = "<group>"; };
 		0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "openid-AppAuth-iOS"; path = ../..; sourceTree = "<group>"; };
-		06375C8721A4E50E00338E3F /* AppAuthCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppAuthCore.framework; path = Carthage/Build/iOS/AppAuthCore.framework; sourceTree = "<group>"; };
 		0646249A205F026300072191 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		064624AD205F034A00072191 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		9F265B971F9AC5D600DC14BF /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */,
+				040B050D28DB443C0044551A /* SequenexOpenIdConnectLibrary */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -100,7 +101,6 @@
 		9F265BD81F9AE4CA00DC14BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				06375C8721A4E50E00338E3F /* AppAuthCore.framework */,
 				9F265BD91F9AE50400DC14BF /* AppAuth.framework */,
 				0646249A205F026300072191 /* NotificationCenter.framework */,
 			);

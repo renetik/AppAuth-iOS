@@ -98,12 +98,10 @@ extension AppAuthExampleViewController {
 extension AppAuthExampleViewController {
 
     @IBAction func authWithAutoCodeExchange(_ sender: UIButton) {
-
         guard let issuer = URL(string: kIssuer) else {
             self.logMessage("Error creating URL for : \(kIssuer)")
             return
         }
-
         self.logMessage("Fetching configuration for issuer: \(issuer)")
 
         // discovers endpoints
