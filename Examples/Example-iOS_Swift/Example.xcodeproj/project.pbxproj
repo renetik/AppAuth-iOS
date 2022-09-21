@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0406044E28D9F1640099CAF3 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0406044D28D9F1640099CAF3 /* AppAuth */; };
-		0406045028D9F1640099CAF3 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0406044F28D9F1640099CAF3 /* AppAuthCore */; };
-		0406045428D9F1850099CAF3 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0406045328D9F1850099CAF3 /* AppAuth */; };
-		0406045628D9F1850099CAF3 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0406045528D9F1850099CAF3 /* AppAuthCore */; };
+		0463EB4C28DB3CE600C641AC /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB4B28DB3CE600C641AC /* AppAuth */; };
+		0463EB4E28DB3CE600C641AC /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB4D28DB3CE600C641AC /* AppAuthCore */; };
+		0463EB5028DB3CEB00C641AC /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB4F28DB3CEB00C641AC /* AppAuth */; };
+		0463EB5228DB3CEB00C641AC /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0463EB5128DB3CEB00C641AC /* AppAuthCore */; };
 		0646249B205F026300072191 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0646249A205F026300072191 /* NotificationCenter.framework */; };
 		0646249E205F026300072191 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0646249D205F026300072191 /* TodayViewController.swift */; };
 		064624A1205F026300072191 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0646249F205F026300072191 /* MainInterface.storyboard */; };
@@ -47,7 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0406044C28D9F1480099CAF3 /* openid-AppAuth-iOS */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "openid-AppAuth-iOS"; path = ../..; sourceTree = "<group>"; };
+		0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "openid-AppAuth-iOS"; path = ../..; sourceTree = "<group>"; };
 		06375C8721A4E50E00338E3F /* AppAuthCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppAuthCore.framework; path = Carthage/Build/iOS/AppAuthCore.framework; sourceTree = "<group>"; };
 		06462499205F026300072191 /* Example_Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Example_Extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0646249A205F026300072191 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
@@ -71,9 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0406045428D9F1850099CAF3 /* AppAuth in Frameworks */,
+				0463EB5028DB3CEB00C641AC /* AppAuth in Frameworks */,
 				0646249B205F026300072191 /* NotificationCenter.framework in Frameworks */,
-				0406045628D9F1850099CAF3 /* AppAuthCore in Frameworks */,
+				0463EB5228DB3CEB00C641AC /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,8 +81,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0406044E28D9F1640099CAF3 /* AppAuth in Frameworks */,
-				0406045028D9F1640099CAF3 /* AppAuthCore in Frameworks */,
+				0463EB4C28DB3CE600C641AC /* AppAuth in Frameworks */,
+				0463EB4E28DB3CE600C641AC /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,7 +92,7 @@
 		0406044B28D9F1480099CAF3 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				0406044C28D9F1480099CAF3 /* openid-AppAuth-iOS */,
+				0463EB4A28DB3CC500C641AC /* openid-AppAuth-iOS */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -169,8 +169,8 @@
 			);
 			name = Example_Extension;
 			packageProductDependencies = (
-				0406045328D9F1850099CAF3 /* AppAuth */,
-				0406045528D9F1850099CAF3 /* AppAuthCore */,
+				0463EB4F28DB3CEB00C641AC /* AppAuth */,
+				0463EB5128DB3CEB00C641AC /* AppAuthCore */,
 			);
 			productName = Example_Extension;
 			productReference = 06462499205F026300072191 /* Example_Extension.appex */;
@@ -192,8 +192,8 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				0406044D28D9F1640099CAF3 /* AppAuth */,
-				0406044F28D9F1640099CAF3 /* AppAuthCore */,
+				0463EB4B28DB3CE600C641AC /* AppAuth */,
+				0463EB4D28DB3CE600C641AC /* AppAuthCore */,
 			);
 			productName = Example;
 			productReference = 9F265B971F9AC5D600DC14BF /* Example.app */;
@@ -566,19 +566,19 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0406044D28D9F1640099CAF3 /* AppAuth */ = {
+		0463EB4B28DB3CE600C641AC /* AppAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppAuth;
 		};
-		0406044F28D9F1640099CAF3 /* AppAuthCore */ = {
+		0463EB4D28DB3CE600C641AC /* AppAuthCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppAuthCore;
 		};
-		0406045328D9F1850099CAF3 /* AppAuth */ = {
+		0463EB4F28DB3CEB00C641AC /* AppAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppAuth;
 		};
-		0406045528D9F1850099CAF3 /* AppAuthCore */ = {
+		0463EB5128DB3CEB00C641AC /* AppAuthCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppAuthCore;
 		};
