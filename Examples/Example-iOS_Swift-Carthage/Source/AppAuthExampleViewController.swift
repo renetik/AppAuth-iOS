@@ -75,15 +75,15 @@ extension AppAuthExampleViewController {
         // The example needs to be configured with your own client details.
         // See: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md
 
-        assert(kIssuer != "https://issuer.example.com",
+        assert(OIDCIssuer != "https://issuer.example.com",
                 "Update kIssuer with your own issuer.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
-        assert(kClientID != "YOUR_CLIENT_ID",
+        assert(OAuthClientID != "YOUR_CLIENT_ID",
                 "Update kClientID with your own client ID.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
-        assert(kRedirectURI != "com.example.app:/oauth2redirect/example-provider",
+        assert(OAuthRedirectURI != "com.example.app:/oauth2redirect/example-provider",
                 "Update kRedirectURI with your own redirect URI.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
@@ -117,8 +117,8 @@ extension AppAuthExampleViewController {
 
     @IBAction func authWithAutoCodeExchange(_ sender: UIButton) {
 
-        guard let issuer = URL(string: kIssuer) else {
-            self.logMessage("Error creating URL for : \(kIssuer)")
+        guard let issuer = URL(string: OIDCIssuer) else {
+            self.logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
 
@@ -135,7 +135,7 @@ extension AppAuthExampleViewController {
 
             self.logMessage("Got configuration: \(config)")
 
-            if let clientId = kClientID {
+            if let clientId = OAuthClientID {
                 self.doAuthWithAutoCodeExchange(configuration: config, clientID: clientId, clientSecret: nil)
             } else {
                 self.doClientRegistration(configuration: config) { configuration, response in
@@ -156,8 +156,8 @@ extension AppAuthExampleViewController {
 
     @IBAction func authNoCodeExchange(_ sender: UIButton) {
 
-        guard let issuer = URL(string: kIssuer) else {
-            self.logMessage("Error creating URL for : \(kIssuer)")
+        guard let issuer = URL(string: OIDCIssuer) else {
+            self.logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
 
@@ -177,7 +177,7 @@ extension AppAuthExampleViewController {
 
             self.logMessage("Got configuration: \(configuration)")
 
-            if let clientId = kClientID {
+            if let clientId = OAuthClientID {
 
                 self.doAuthWithoutCodeExchange(configuration: configuration, clientID: clientId, clientSecret: nil)
 
@@ -338,8 +338,8 @@ extension AppAuthExampleViewController {
 
     func doClientRegistration(configuration: OIDServiceConfiguration, callback: @escaping PostRegistrationCallback) {
 
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            self.logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
 
@@ -369,8 +369,8 @@ extension AppAuthExampleViewController {
 
     func doAuthWithAutoCodeExchange(configuration: OIDServiceConfiguration, clientID: String, clientSecret: String?) {
 
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            self.logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
 
@@ -405,8 +405,8 @@ extension AppAuthExampleViewController {
 
     func doAuthWithoutCodeExchange(configuration: OIDServiceConfiguration, clientID: String, clientSecret: String?) {
 
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            self.logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
 

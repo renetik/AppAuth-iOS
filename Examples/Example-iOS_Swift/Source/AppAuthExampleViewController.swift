@@ -3,25 +3,9 @@ import UIKit
 
 typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?, _ registrationResponse: OIDRegistrationResponse?) -> Void
 
-/**
- The OIDC issuer from which the configuration will be discovered.
-*/
-let kIssuer: String = "https://accounts.google.com";
-
-/**
- The OAuth client ID.
-
- For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
- Set to nil to use dynamic registration with this example.
-*/
-let kClientID: String? = "192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re.apps.googleusercontent.com";
-
-/**
- The OAuth redirect URI for the client @c kClientID.
-
- For client configuration instructions, see the [README](https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md).
-*/
-let kRedirectURI: String = "com.googleusercontent.apps.192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re:/oauth2redirect/google";
+let OIDCIssuer: String = "https://accounts.google.com";
+let OAuthClientID: String? = "192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re.apps.googleusercontent.com";
+let OAuthRedirectURI: String = "com.googleusercontent.apps.192175042918-bns3qrlggk28ue4jhnuemv1irh6b00re:/oauth2redirect/google";
 
 /**
  NSCoding key for the authState property.
@@ -57,16 +41,16 @@ extension AppAuthExampleViewController {
         // The example needs to be configured with your own client details.
         // See: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md
 
-        assert(kIssuer != "https://issuer.example.com",
-                "Update kIssuer with your own issuer.\n" +
+        assert(OIDCIssuer != "https://issuer.example.com",
+            "Update kIssuer with your own issuer.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
-        assert(kClientID != "YOUR_CLIENT_ID",
-                "Update kClientID with your own client ID.\n" +
+        assert(OAuthClientID != "YOUR_CLIENT_ID",
+            "Update kClientID with your own client ID.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
-        assert(kRedirectURI != "com.example.app:/oauth2redirect/example-provider",
-                "Update kRedirectURI with your own redirect URI.\n" +
+        assert(OAuthRedirectURI != "com.example.app:/oauth2redirect/example-provider",
+            "Update kRedirectURI with your own redirect URI.\n" +
                 "Instructions: https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md");
 
         // verifies that the custom URI scheme has been updated in the Info.plist
@@ -76,7 +60,8 @@ extension AppAuthExampleViewController {
         }
 
         guard let items = urlTypes[0] as? [String: AnyObject],
-            let urlSchemes = items["CFBundleURLSchemes"] as? [AnyObject], urlSchemes.count > 0 else {
+              let urlSchemes = items["CFBundleURLSchemes"] as? [AnyObject], urlSchemes.count > 0
+        else {
             assertionFailure("No custom URI scheme has been configured for the project.")
             return
         }
@@ -87,7 +72,7 @@ extension AppAuthExampleViewController {
         }
 
         assert(urlScheme != "com.example.app",
-                "Configure the URI scheme in Info.plist (URL Types -> Item 0 -> URL Schemes -> Item 0) " +
+            "Configure the URI scheme in Info.plist (URL Types -> Item 0 -> URL Schemes -> Item 0) " +
                 "with the scheme of your redirect URI. Full instructions: " +
                 "https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_Swift-Carthage/README.md")
     }
@@ -95,11 +80,12 @@ extension AppAuthExampleViewController {
 }
 
 //MARK: IBActions
+
 extension AppAuthExampleViewController {
 
     @IBAction func authWithAutoCodeExchange(_ sender: UIButton) {
-        guard let issuer = URL(string: kIssuer) else {
-            self.logMessage("Error creating URL for : \(kIssuer)")
+        guard let issuer = URL(string: OIDCIssuer) else {
+            self.logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
         self.logMessage("Fetching configuration for issuer: \(issuer)")
@@ -115,9 +101,10 @@ extension AppAuthExampleViewController {
 
             self.logMessage("Got configuration: \(config)")
 
-            if let clientId = kClientID {
+            if let clientId = OAuthClientID {
                 self.doAuthWithAutoCodeExchange(configuration: config, clientID: clientId, clientSecret: nil)
-            } else {
+            }
+            else {
                 self.doClientRegistration(configuration: config) { configuration, response in
 
                     guard let configuration = configuration, let clientID = response?.clientID else {
@@ -126,8 +113,8 @@ extension AppAuthExampleViewController {
                     }
 
                     self.doAuthWithAutoCodeExchange(configuration: configuration,
-                                                    clientID: clientID,
-                                                    clientSecret: response?.clientSecret)
+                        clientID: clientID,
+                        clientSecret: response?.clientSecret)
                 }
             }
         }
@@ -136,8 +123,8 @@ extension AppAuthExampleViewController {
 
     @IBAction func authNoCodeExchange(_ sender: UIButton) {
 
-        guard let issuer = URL(string: kIssuer) else {
-            self.logMessage("Error creating URL for : \(kIssuer)")
+        guard let issuer = URL(string: OIDCIssuer) else {
+            self.logMessage("Error creating URL for : \(OIDCIssuer)")
             return
         }
 
@@ -145,7 +132,7 @@ extension AppAuthExampleViewController {
 
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
 
-            if let error = error  {
+            if let error = error {
                 self.logMessage("Error retrieving discovery document: \(error.localizedDescription)")
                 return
             }
@@ -157,11 +144,12 @@ extension AppAuthExampleViewController {
 
             self.logMessage("Got configuration: \(configuration)")
 
-            if let clientId = kClientID {
+            if let clientId = OAuthClientID {
 
                 self.doAuthWithoutCodeExchange(configuration: configuration, clientID: clientId, clientSecret: nil)
 
-            } else {
+            }
+            else {
 
                 self.doClientRegistration(configuration: configuration) { configuration, response in
 
@@ -170,15 +158,14 @@ extension AppAuthExampleViewController {
                     }
 
                     self.doAuthWithoutCodeExchange(configuration: configuration,
-                                                   clientID: response.clientID,
-                                                   clientSecret: response.clientSecret)
+                        clientID: response.clientID,
+                        clientSecret: response.clientSecret)
                 }
             }
         }
     }
 
     @IBAction func codeExchange(_ sender: UIButton) {
-
         guard let tokenExchangeRequest = self.authState?.lastAuthorizationResponse.tokenExchangeRequest() else {
             self.logMessage("Error creating authorization code exchange request")
             return
@@ -190,7 +177,8 @@ extension AppAuthExampleViewController {
 
             if let tokenResponse = response {
                 self.logMessage("Received token response with accessToken: \(tokenResponse.accessToken ?? "DEFAULT_TOKEN")")
-            } else {
+            }
+            else {
                 self.logMessage("Token exchange error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
             }
             self.authState?.update(with: response, error: error)
@@ -210,7 +198,7 @@ extension AppAuthExampleViewController {
 
         self.authState?.performAction() { (accessToken, idToken, error) in
 
-            if error != nil  {
+            if error != nil {
                 self.logMessage("Error fetching fresh tokens: \(error?.localizedDescription ?? "ERROR")")
                 return
             }
@@ -222,17 +210,18 @@ extension AppAuthExampleViewController {
 
             if currentAccessToken != accessToken {
                 self.logMessage("Access token was refreshed automatically (\(currentAccessToken ?? "CURRENT_ACCESS_TOKEN") to \(accessToken))")
-            } else {
+            }
+            else {
                 self.logMessage("Access token was fresh and not updated \(accessToken)")
             }
 
             var urlRequest = URLRequest(url: userinfoEndpoint)
-            urlRequest.allHTTPHeaderFields = ["Authorization":"Bearer \(accessToken)"]
+            urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
 
             let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
 
                 DispatchQueue.main.async {
-                    
+
                     guard error == nil else {
                         self.logMessage("HTTP request failed \(error?.localizedDescription ?? "ERROR")")
                         return
@@ -264,11 +253,12 @@ extension AppAuthExampleViewController {
                             // "401 Unauthorized" generally indicates there is an issue with the authorization
                             // grant. Puts OIDAuthState into an error state.
                             let oauthError = OIDErrorUtilities.resourceServerAuthorizationError(withCode: 0,
-                                                                                                errorResponse: json,
-                                                                                                underlyingError: error)
+                                errorResponse: json,
+                                underlyingError: error)
                             self.authState?.update(withAuthorizationError: oauthError)
                             self.logMessage("Authorization Error (\(oauthError)). Response: \(responseText ?? "RESPONSE_TEXT")")
-                        } else {
+                        }
+                        else {
                             self.logMessage("HTTP: \(response.statusCode), Response: \(responseText ?? "RESPONSE_TEXT")")
                         }
 
@@ -286,61 +276,48 @@ extension AppAuthExampleViewController {
     }
 
     @IBAction func trashClicked(_ sender: UIBarButtonItem) {
-
         let alert = UIAlertController(title: nil,
-                                      message: nil,
-                                      preferredStyle: UIAlertControllerStyle.actionSheet)
+            message: nil,
+            preferredStyle: UIAlertControllerStyle.actionSheet)
 
         let clearAuthAction = UIAlertAction(title: "Clear OAuthState", style: .destructive) { (_: UIAlertAction) in
             self.setAuthState(nil)
             self.updateUI()
         }
         alert.addAction(clearAuthAction)
-        
         let clearLogs = UIAlertAction(title: "Clear Logs", style: .default) { (_: UIAlertAction) in
             DispatchQueue.main.async {
                 self.logTextView.text = ""
             }
         }
-
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-
-
         alert.addAction(clearLogs)
         alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
-
+        present(alert, animated: true, completion: nil)
     }
 }
 
-//MARK: AppAuth Methods
 extension AppAuthExampleViewController {
-
     func doClientRegistration(configuration: OIDServiceConfiguration, callback: @escaping PostRegistrationCallback) {
-
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
-
         let request: OIDRegistrationRequest = OIDRegistrationRequest(configuration: configuration,
-                                                                     redirectURIs: [redirectURI],
-                                                                     responseTypes: nil,
-                                                                     grantTypes: nil,
-                                                                     subjectType: nil,
-                                                                     tokenEndpointAuthMethod: "client_secret_post",
-                                                                     additionalParameters: nil)
-
-        // performs registration request
-        self.logMessage("Initiating registration request")
-
+            redirectURIs: [redirectURI],
+            responseTypes: nil,
+            grantTypes: nil,
+            subjectType: nil,
+            tokenEndpointAuthMethod: "client_secret_post",
+            additionalParameters: nil)
+        logMessage("Initiating registration request")
         OIDAuthorizationService.perform(request) { response, error in
-
             if let regResponse = response {
                 self.setAuthState(OIDAuthState(registrationResponse: regResponse))
                 self.logMessage("Got registration response: \(regResponse)")
                 callback(configuration, regResponse)
-            } else {
+            }
+            else {
                 self.logMessage("Registration error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
             }
@@ -348,35 +325,31 @@ extension AppAuthExampleViewController {
     }
 
     func doAuthWithAutoCodeExchange(configuration: OIDServiceConfiguration, clientID: String, clientSecret: String?) {
-
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
 
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            self.logMessage("Error accessing AppDelegate")
+            logMessage("Error accessing AppDelegate")
             return
         }
-
-        // builds authentication request
         let request = OIDAuthorizationRequest(configuration: configuration,
-                                              clientId: clientID,
-                                              clientSecret: clientSecret,
-                                              scopes: [OIDScopeOpenID, OIDScopeProfile],
-                                              redirectURL: redirectURI,
-                                              responseType: OIDResponseTypeCode,
-                                              additionalParameters: nil)
+            clientId: clientID,
+            clientSecret: clientSecret,
+            scopes: [OIDScopeOpenID, OIDScopeProfile],
+            redirectURL: redirectURI,
+            responseType: OIDResponseTypeCode,
+            additionalParameters: nil)
 
-        // performs authentication request
         logMessage("Initiating authorization request with scope: \(request.scope ?? "DEFAULT_SCOPE")")
-
-        appDelegate.currentAuthorizationFlow = OIDAuthState.authState(byPresenting: request, presenting: self) { authState, error in
-
+        appDelegate.currentAuthorizationFlow = OIDAuthState.authState(
+            byPresenting: request, presenting: self) { authState, error in
             if let authState = authState {
-                self.setAuthState(authState)
                 self.logMessage("Got authorization tokens. Access token: \(authState.lastTokenResponse?.accessToken ?? "DEFAULT_TOKEN")")
-            } else {
+                self.setAuthState(authState)
+            }
+            else {
                 self.logMessage("Authorization error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
                 self.setAuthState(nil)
             }
@@ -384,66 +357,53 @@ extension AppAuthExampleViewController {
     }
 
     func doAuthWithoutCodeExchange(configuration: OIDServiceConfiguration, clientID: String, clientSecret: String?) {
-
-        guard let redirectURI = URL(string: kRedirectURI) else {
-            self.logMessage("Error creating URL for : \(kRedirectURI)")
+        guard let redirectURI = URL(string: OAuthRedirectURI) else {
+            logMessage("Error creating URL for : \(OAuthRedirectURI)")
             return
         }
-
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            self.logMessage("Error accessing AppDelegate")
+            logMessage("Error accessing AppDelegate")
             return
         }
-
-        // builds authentication request
         let request = OIDAuthorizationRequest(configuration: configuration,
-                                              clientId: clientID,
-                                              clientSecret: clientSecret,
-                                              scopes: [OIDScopeOpenID, OIDScopeProfile],
-                                              redirectURL: redirectURI,
-                                              responseType: OIDResponseTypeCode,
-                                              additionalParameters: nil)
+            clientId: clientID,
+            clientSecret: clientSecret,
+            scopes: [OIDScopeOpenID, OIDScopeProfile],
+            redirectURL: redirectURI,
+            responseType: OIDResponseTypeCode,
+            additionalParameters: nil)
 
-        // performs authentication request
         logMessage("Initiating authorization request with scope: \(request.scope ?? "DEFAULT_SCOPE")")
 
         appDelegate.currentAuthorizationFlow = OIDAuthorizationService.present(request, presenting: self) { (response, error) in
-
             if let response = response {
                 let authState = OIDAuthState(authorizationResponse: response)
                 self.setAuthState(authState)
                 self.logMessage("Authorization response with code: \(response.authorizationCode ?? "DEFAULT_CODE")")
                 // could just call [self tokenExchange:nil] directly, but will let the user initiate it.
-            } else {
+            }
+            else {
                 self.logMessage("Authorization error: \(error?.localizedDescription ?? "DEFAULT_ERROR")")
             }
         }
     }
 }
 
-//MARK: OIDAuthState Delegate
 extension AppAuthExampleViewController: OIDAuthStateChangeDelegate, OIDAuthStateErrorDelegate {
-
     func didChange(_ state: OIDAuthState) {
-        self.stateChanged()
+        stateChanged()
     }
 
     func authState(_ state: OIDAuthState, didEncounterAuthorizationError error: Error) {
-        self.logMessage("Received authorization error: \(error)")
+        logMessage("Received authorization error: \(error)")
     }
 }
 
-//MARK: Helper Methods
 extension AppAuthExampleViewController {
 
     func saveState() {
-
         var data: Data? = nil
-
-        if let authState = self.authState {
-            data = NSKeyedArchiver.archivedData(withRootObject: authState)
-        }
-        
+        if let authState = authState { data = NSKeyedArchiver.archivedData(withRootObject: authState) }
         if let userDefaults = UserDefaults(suiteName: "group.net.openid.appauth.Example") {
             userDefaults.set(data, forKey: kAppAuthExampleAuthStateKey)
             userDefaults.synchronize()
@@ -451,60 +411,52 @@ extension AppAuthExampleViewController {
     }
 
     func loadState() {
-        guard let data = UserDefaults(suiteName: "group.net.openid.appauth.Example")?.object(forKey: kAppAuthExampleAuthStateKey) as? Data else {
+        guard let data = UserDefaults(suiteName: "group.net.openid.appauth.Example")?
+            .object(forKey: kAppAuthExampleAuthStateKey) as? Data
+        else {
             return
         }
-
         if let authState = NSKeyedUnarchiver.unarchiveObject(with: data) as? OIDAuthState {
-            self.setAuthState(authState)
+            setAuthState(authState)
         }
     }
 
     func setAuthState(_ authState: OIDAuthState?) {
         if (self.authState == authState) {
-            return;
+            return
         }
-        self.authState = authState;
-        self.authState?.stateChangeDelegate = self;
-        self.stateChanged()
+        self.authState = authState
+        self.authState?.stateChangeDelegate = self
+        stateChanged()
     }
 
     func updateUI() {
-
-        self.codeExchangeButton.isEnabled = self.authState?.lastAuthorizationResponse.authorizationCode != nil && !((self.authState?.lastTokenResponse) != nil)
-
+        codeExchangeButton.isEnabled = self.authState?.lastAuthorizationResponse.authorizationCode != nil && !((self.authState?.lastTokenResponse) != nil)
         if let authState = self.authState {
-            self.authAutoButton.setTitle("1. Re-Auth", for: .normal)
-            self.authManual.setTitle("1(A) Re-Auth", for: .normal)
-            self.userinfoButton.isEnabled = authState.isAuthorized ? true : false
-        } else {
-            self.authAutoButton.setTitle("1. Auto", for: .normal)
-            self.authManual.setTitle("1(A) Manual", for: .normal)
-            self.userinfoButton.isEnabled = false
+            authAutoButton.setTitle("1. Re-Auth", for: .normal)
+            authManual.setTitle("1(A) Re-Auth", for: .normal)
+            userinfoButton.isEnabled = authState.isAuthorized ? true : false
+        }
+        else {
+            authAutoButton.setTitle("1. Auto", for: .normal)
+            authManual.setTitle("1(A) Manual", for: .normal)
+            userinfoButton.isEnabled = false
         }
     }
 
     func stateChanged() {
-        self.saveState()
-        self.updateUI()
+        saveState()
+        updateUI()
     }
 
     func logMessage(_ message: String?) {
-
-        guard let message = message else {
-            return
-        }
-
+        guard let message = message else { return }
         print(message);
-
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm:ss";
         let dateString = dateFormatter.string(from: Date())
-
-        // appends to output log
         DispatchQueue.main.async {
-            let logText = "\(self.logTextView.text ?? "")\n\(dateString): \(message)"
-            self.logTextView.text = logText
+            self.logTextView.text = "\(self.logTextView.text ?? "")\n\(dateString): \(message)"
         }
     }
 }
