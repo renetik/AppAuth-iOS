@@ -27,7 +27,7 @@ class AppAuthExampleViewController: UIViewController {
 
     func updateUI() {
         codeExchangeButton.isEnabled = appDelegate?.oidc.isCodeExchangePossible == true
-        if appDelegate?.oidc.hasAuthState == true {
+        if appDelegate?.oidc.isAuthenticated == true {
             authAutoButton.setTitle("1. Re-Auth", for: .normal)
             authManual.setTitle("1(A) Re-Auth", for: .normal)
             userinfoButton.isEnabled = appDelegate?.oidc.isAuthorized == true
