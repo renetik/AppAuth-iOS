@@ -2,7 +2,7 @@ import AppAuth
 import AppAuthCore
 import Foundation
 
-protocol OIDCAuthorizer {
+public protocol OIDCAuthorizer {
     init(using configuration: OIDCConfiguration)
 
     // indicates if we need to display login interface to get token
@@ -17,7 +17,7 @@ protocol OIDCAuthorizer {
 
     // resume login flow when app is opened from external browser
     // this might not be needed if we show embedded webview within the app
-    func resume(with url: URL)
+    func resume(with url: URL) -> Bool
 
     // clear both tokens
     // after calling this method, needsLogin will be true
@@ -25,21 +25,33 @@ protocol OIDCAuthorizer {
     func logout()
 }
 
-struct OIDCConfiguration {
+public struct OIDCConfiguration {
     var issuer: String
     var clientID: String?
     var redirectURI: URL
     var barTintColor: UIColor?
     var controlTintColor: UIColor?
+    
+    public init(issuer: String, clientID: String? = nil,
+                redirectURI: URL, barTintColor: UIColor? = nil,
+                controlTintColor: UIColor? = nil) {
+        self.issuer = issuer
+        self.clientID = clientID
+        self.redirectURI = redirectURI
+        self.barTintColor = barTintColor
+        self.controlTintColor = controlTintColor
+    }
 }
 
-enum OIDCError: LocalizedError {
+
+public enum OIDCError: LocalizedError {
     case loginCancelled
     case offline
     case networkError(cause: Error)
 }
 
 //import UIKit
+
 //
 //extension Decodable where Self: UIColor {
 //
